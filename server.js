@@ -23,10 +23,6 @@ app.get('/todos/:slug', function (request, response) {
   response.json(todos[request.params.slug])
 })
 
-app.use(function (request, response, next) {
-  response.status(404).end(request.url + ' not found')
-})
-
 app.post('/todos', function (request, response) {
   var slug = request.body.name.trim().toLowerCase().split(' ').join('-')
   todos[slug] = {
@@ -58,6 +54,10 @@ app.delete('/todos/:slug', function (request, response) {
   }
   delete todos[request.params.slug]
   response.redirect('/todos')
+})
+
+app.use(function (request, response, next) {
+  response.status(404).end(request.url + ' not found')
 })
 
 app.listen(port)
