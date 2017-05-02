@@ -12,7 +12,7 @@ app.get('/', function (request, response) {
 })
 
 app.get('/todos', function (request, response) {
-  respnse.json(todos)
+  response.json(todos)
 })
 
 app.get('/todos/:slug', function (request, response) {
