@@ -17,10 +17,14 @@ app.get('/todos', function (request, response) {
 
 app.get('/todos/:slug', function (request, response) {
   if (!todos[request.params.slug]) {
-    response.status(404).end('sorry, no such product: ' + request.params.slug)
+    response.status(404).end('sorry, no such todo: ' + request.params.slug)
     return
   }
   response.json(todos[request.params.slug])
+})
+
+app.use(function (request, response, next) {
+  response.status(404).end(request.url + ' not found')
 })
 
 app.post('/todos', function (request, response) {
@@ -32,7 +36,26 @@ app.post('/todos', function (request, response) {
   response.redirect('/todos/' + slug)
 })
 
+app.put('/todos/:slug', function (request, response) {
+  if (!todos[request.params.slug]) {
+    response.status(404).end('sorry, no such todo: ' + request.params.slug)
+    return
+  }
+  var todo = todos[request.params.slug]
+  if (request.body.name !== undefined) {
+    todo.name = request.body.name.trim()
+  }
+  if (request.body.status !== undefined) {
+    todo.status = request.body.status
+  }
+  response.redirect('/todos')
+})
+
 app.delete('/todos/:slug', function (request, response) {
+  if (!todos[request.params.slug]) {
+    response.status(404).end('sorry, no such product: ' + request.params.slug)
+    return
+  }
   delete todos[request.params.slug]
   response.redirect('/todos')
 })
